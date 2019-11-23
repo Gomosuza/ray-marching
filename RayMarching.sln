@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.161
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayMarching", "RayMarching\RayMarching.csproj", "{9669773F-282C-4553-A0C2-09F4F045E318}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayMarching", "RayMarching\RayMarching.csproj", "{9669773F-282C-4553-A0C2-09F4F045E318}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.ComputeShader", "MonoGame.Framework.ComputeShader\MonoGame.Framework.ComputeShader\MonoGame.Framework.ComputeShader.csproj", "{6C513D5A-A642-4D53-BC14-498A1D44C68E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9669773F-282C-4553-A0C2-09F4F045E318}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9669773F-282C-4553-A0C2-09F4F045E318}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9669773F-282C-4553-A0C2-09F4F045E318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C513D5A-A642-4D53-BC14-498A1D44C68E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C513D5A-A642-4D53-BC14-498A1D44C68E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C513D5A-A642-4D53-BC14-498A1D44C68E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C513D5A-A642-4D53-BC14-498A1D44C68E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

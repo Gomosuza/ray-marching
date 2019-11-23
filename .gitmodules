@@ -1,0 +1,3 @@
+[submodule "MonoGame.Framework.ComputeShader"]
+	path = MonoGame.Framework.ComputeShader
+	url = https://github.com/MarcStan/monogame-framework-computeshader
