@@ -11,14 +11,14 @@ namespace RayMarching.Configuration
         /// </summary>
         public Dictionary<string, Keys[]> ActionKeyMap { get; set; } = new Dictionary<string, Keys[]>
         {
-            [nameof(InputAction.Exit)] = new[] { Keys.Escape },
-            [nameof(InputAction.Forward)] = new[] { Keys.W, Keys.Up },
-            [nameof(InputAction.Left)] = new[] { Keys.A, Keys.Left },
-            [nameof(InputAction.Backward)] = new[] { Keys.S, Keys.Down },
-            [nameof(InputAction.Right)] = new[] { Keys.D, Keys.Right },
-            [nameof(InputAction.Up)] = new[] { Keys.Space },
-            [nameof(InputAction.Down)] = new[] { Keys.LeftControl, Keys.RightControl },
-            [nameof(InputAction.Sprint)] = new[] { Keys.LeftShift }
+            [nameof(InputAction.Exit).ToLowerInvariant()] = new[] { Keys.Escape },
+            [nameof(InputAction.Forward).ToLowerInvariant()] = new[] { Keys.W, Keys.Up },
+            [nameof(InputAction.Left).ToLowerInvariant()] = new[] { Keys.A, Keys.Left },
+            [nameof(InputAction.Backward).ToLowerInvariant()] = new[] { Keys.S, Keys.Down },
+            [nameof(InputAction.Right).ToLowerInvariant()] = new[] { Keys.D, Keys.Right },
+            [nameof(InputAction.Up).ToLowerInvariant()] = new[] { Keys.Space },
+            [nameof(InputAction.Down).ToLowerInvariant()] = new[] { Keys.LeftControl, Keys.RightControl },
+            [nameof(InputAction.Sprint).ToLowerInvariant()] = new[] { Keys.LeftShift }
         };
     }
 }

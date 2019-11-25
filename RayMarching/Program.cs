@@ -35,7 +35,7 @@ namespace RayMarching
                 var value = section.Value;
 
                 var keyValues = (value.Contains('|') ? value.Split('|') : new[] { value }).Select(k => Enum.Parse<Keys>(k, true)).ToArray();
-                settings.Keybindings.ActionKeyMap[key] = keyValues;
+                settings.Keybindings.ActionKeyMap[key.ToLowerInvariant()] = keyValues;
             }
             return settings;
         }
