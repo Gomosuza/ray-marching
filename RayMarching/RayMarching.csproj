@@ -26,7 +26,7 @@
     <None Update="raymarching.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Shaders\raymarching.glslcs">
+    <None Update="Shaders\raymarching.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -17,7 +17,8 @@ namespace RayMarching
             GraphicsDevice graphicsDevice)
         {
             _graphicsDevice = graphicsDevice;
-            _shader = new ComputeShader(graphicsDevice, "Shaders/raymarching.glslcs");
+            // spec wants .comp but github only has code highlighting for glsl https://github.com/KhronosGroup/glslang#execution-of-standalone-wrapper
+            _shader = new ComputeShader(graphicsDevice, "Shaders/raymarching.glsl");
         }
 
         public RenderTarget2D ChangeSize(int newWidth, int newHeight)

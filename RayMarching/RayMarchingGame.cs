@@ -36,7 +36,7 @@ namespace RayMarching
             collection.AddSingleton(GraphicsDevice);
             collection.AddSingleton<IGraphicsDeviceManager>(_graphicsDeviceManager);
             collection.AddSingleton<IGraphicsDeviceService>(_graphicsDeviceManager);
-            collection.AddSingleton<ICamera>(sp => new FpsCamera(GraphicsDevice, sp.GetRequiredService<Settings>(), new Vector3(0, 2, -10f), new Vector3(0, 0, 1)));
+            collection.AddSingleton<ICamera>(sp => new FpsCamera(GraphicsDevice, sp.GetRequiredService<Settings>(), new Vector3(0, 0, -5), new Vector3(0, 0, 1)));
 
             collection.Scan(scan =>
             {

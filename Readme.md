@@ -1,4 +1,4 @@
-# Ray marching demo with SDF
+# Ray marching demo with Signed distance fields
 
 Realtime compute shader based raymarching with [CSG](https://en.wikipedia.org/wiki/Constructive_solid_geometry) based on [SDF](https://en.wikipedia.org/wiki/Signed_distance_function):
 
