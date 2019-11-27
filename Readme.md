@@ -4,6 +4,8 @@ Realtime compute shader based raymarching with [CSG](https://en.wikipedia.org/wi
 
 :warning: This project is work in progress!
 
+[![Ray-marching](https://dev.azure.com/marcstanlive/Opensource/_apis/build/status/120)](https://dev.azure.com/marcstanlive/Opensource/_build/definition?definitionId=120)
+
 ___
 
 # Setup
