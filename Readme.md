@@ -10,7 +10,7 @@ ___
 
 # Setup
 
-Built with Visual Studio 2019 and .Net Core 3.0.
+Built with Visual Studio 2019 and .Net Core 3.1.
 
 The compute shader implementation is in its [own repository](https://github.com/MarcStan/monogame-framework-computeshader) and referenced via a git submodule. Therefore you must run:
 
