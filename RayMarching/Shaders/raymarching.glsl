@@ -76,7 +76,8 @@ float morphingSpheres(vec3 pos, float r)
             0.1);
 }
 
-float sceneSDF(vec3 p)
+/* returns distance and material index */
+vec2 sceneSDF(vec3 p)
 {
     float dist = MAX_DEPTH;
     // bunch of hardcoded spheres that don't move
@@ -90,26 +91,30 @@ float sceneSDF(vec3 p)
     dist = min(dist, morphingSpheres(p, 1));
     dist = min(dist, smoothedSpheres(p, 1));
 
-    return dist;
+    return vec2(dist, 0.0);
 }
 
-float march(vec3 pos, vec3 dir)
+vec2 march(vec3 pos, vec3 dir)
 {
     float depth = 0.0;
+    float matIndex = 0;
     const int maxMarchingSteps = 100;
     for (int i = 0; i < maxMarchingSteps; i++)
     {
-        float dist = sceneSDF(pos + depth * dir);
+        vec2 res = sceneSDF(pos + depth * dir);
+        float dist = res.x;
+        matIndex = res.y;
         if (dist < EPSILON)
         {
-            return depth;
+            return vec2(depth, matIndex);
         }
         depth += dist;
         if (depth >= MAX_DEPTH)
         {
-            return MAX_DEPTH;
+            return vec2(MAX_DEPTH, -1.0);
         }
     }
+    return vec2(depth, matIndex);
 }
 
 /*
@@ -129,15 +134,16 @@ vec3 getDirection(ivec2 pixel, ivec2 size)
     return direction + (xoff * fovAdjust * right) + (yoff * fovAdjust * up);
 }
 
-vec3 sdfNormal(vec3 p)
+vec3 sdfNormal(vec3 pos)
 {
-    // use gradient to estimate surface normal
-    // expensive, works on any kind of surface
-    return normalize(vec3(
-        sceneSDF(vec3(p.x + EPSILON, p.y, p.z)) - sceneSDF(vec3(p.x - EPSILON, p.y, p.z)),
-        sceneSDF(vec3(p.x, p.y + EPSILON, p.z)) - sceneSDF(vec3(p.x, p.y - EPSILON, p.z)),
-        sceneSDF(vec3(p.x, p.y, p.z  + EPSILON)) - sceneSDF(vec3(p.x, p.y, p.z - EPSILON))
-    ));
+    // https://iquilezles.org/www/articles/normalsSDF/normalsSDF.htm
+    // uses gradient to estimate surface normal
+    // expensive but works on any kind of surface
+    vec2 e = vec2(1.0, -1.0) * 0.5773 * 0.001;
+    return normalize(e.xyy * sceneSDF(pos + e.xyy).x + 
+                     e.yyx * sceneSDF(pos + e.yyx).x + 
+                     e.yxy * sceneSDF(pos + e.yxy).x + 
+                     e.xxx * sceneSDF(pos + e.xxx).x);
 }
 
 vec3 light(vec3 eye, vec3 sdfPos, vec3 lightPos, vec3 lightPower, float illumination)
@@ -168,8 +174,8 @@ vec3 phong(vec3 eye, vec3 sdfPos)
     const vec3 ambient = vec3(0.2);
     // hardcode lights
     return ambient +
-    light(eye, sdfPos, vec3(0, 2, -2), vec3(0.5), 10) +
-    light(eye, sdfPos, vec3(0, -2, -2), vec3(0.1), 20);
+        light(eye, sdfPos, vec3(0, 2, -2), vec3(0.5), 10) +
+        light(eye, sdfPos, vec3(0, -2, -2), vec3(0.1), 20);
 }
 
 void main()
@@ -186,7 +192,9 @@ void main()
     vec3 dir = getDirection(pos, size);
 
     vec3 col = vec3(0);
-    float distToScene = march(eye, dir);
+    vec2 res = march(eye, dir);
+    float distToScene = res.x;
+    float matIndex = res.y;
     if (distToScene >= MAX_DEPTH)
     {
         col = vec3(0,148/255.0,1);
