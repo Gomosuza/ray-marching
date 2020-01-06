@@ -25,10 +25,9 @@ struct Box
 
 const Sphere spheres[] =
 {
-    {vec3(-3, 1, 0), 1, vec3(163 / 255.0, 68 / 255.0, 0)},
-    {vec3(0, 1, 0), 1, vec3(163 / 255.0, 68 / 255.0, 0)},
-    {vec3(1, 1, 0), 1, vec3(54 / 255.0, 210 / 255.0, 21 / 255.0)},
-    {vec3(2, 1, 0), 1, vec3(31 / 255.0, 81 / 255.0, 167 / 255.0)}
+    {vec3(-6, 0, 4), 1, vec3(163 / 255.0, 68 / 255.0, 0)},
+    {vec3(-4, 1, 4), 1, vec3(163 / 255.0, 68 / 255.0, 0)},
+    {vec3(-3, 0, 4), 1, vec3(31 / 255.0, 81 / 255.0, 167 / 255.0)}
 };
 
 layout(local_size_x = 8, local_size_y = 8) in;
@@ -39,21 +38,58 @@ float sphere(vec3 pos, vec3 center, float r)
     return length(pos - center) - r;
 }
 
-float box(vec3 p, vec3 b)
+float smin(float a, float b, float k)
 {
-    vec3 q = abs(p) - b;
-    return length(max(q,vec3(0))) + min(max(q.x, max(q.y, q.z)), 0.0);
+    float h = max(k - abs(a-b), 0);
+    return min(a, b) - h*h/(k*4);
+}
+
+/* row of spheres that are smoothed together */
+float smoothedRow(vec3 pos, float r)
+{
+    return smin(
+            sphere(pos, vec3(3, 0, 4), r),
+            smin(
+                sphere(pos, vec3(4, 0, 4),  r),
+                sphere(pos, vec3(5, 0, 4),  r),
+                0.1
+                ),
+                0.1
+            );
+}
+
+float smoothedSpheres(vec3 pos, float r)
+{
+    float smoothFactor = abs(sin(time));
+    return smin(
+            sphere(pos, vec3(4, 3, 4), r),
+            sphere(pos, vec3(3, 3, 4), r),
+            smoothFactor);
+}
+
+float morphingSpheres(vec3 pos, float r)
+{
+    float off = sin(time);
+    return smin(
+            sphere(pos, vec3(off, 0, 4), r),
+            sphere(pos, vec3(0, 0, 4), r),
+            0.1);
 }
 
 float sceneSDF(vec3 p)
 {
     float dist = MAX_DEPTH;
+    // bunch of hardcoded spheres that don't move
     for (int i = 0; i < spheres.length; i++)
     {
         float d = sphere(p, spheres[i].pos, spheres[i].radius);
         if (d < dist)
             dist = d;
     }
+    dist = min(dist, smoothedRow(p, 1));
+    dist = min(dist, morphingSpheres(p, 1));
+    dist = min(dist, smoothedSpheres(p, 1));
+
     return dist;
 }
 
@@ -130,7 +166,7 @@ vec3 light(vec3 eye, vec3 sdfPos, vec3 lightPos, vec3 lightPower, float illumina
 vec3 phong(vec3 eye, vec3 sdfPos)
 {
     const vec3 ambient = vec3(0.2);
-    // hardcode single light
+    // hardcode lights
     return ambient +
     light(eye, sdfPos, vec3(0, 2, -2), vec3(0.5), 10) +
     light(eye, sdfPos, vec3(0, -2, -2), vec3(0.1), 20);
@@ -157,11 +193,11 @@ void main()
     }
     else
     {
-        // fade objects based on distance
-        col = vec3(1 - (distToScene / 5.0));
-
         vec3 scenePos = eye + dir * distToScene;
         col = phong(eye, scenePos);
+
+        // frenel
+        col += vec3(clamp(1+dot(dir,sdfNormal(scenePos)),0,1));
     }
     imageStore(framebuffer, pos, vec4(col, 1));
 }

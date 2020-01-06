@@ -4,6 +4,8 @@ Realtime compute shader based raymarching with [CSG](https://en.wikipedia.org/wi
 
 :warning: This project is work in progress!
 
+![Ray marching](screenshots/raymarching.png)
+
 [![Ray-marching](https://dev.azure.com/marcstanlive/Opensource/_apis/build/status/120)](https://dev.azure.com/marcstanlive/Opensource/_build/definition?definitionId=120)
 
 ___
@@ -22,9 +24,19 @@ after checkout to build the solution successfully.
 
 # Details
 
-tbd
+* Uses signed distance fields to define simple geometry
+* Uses CSG based operations to create complex geometry from many simple pieces
+* configuration options (currently limited to file/command line based at startup)
+* player & object movement within the scene
 
 # Known issues
 
 * purple screen when using compute shader on mobile chipsets (Intel Graphics 6xx and the likes). The shader simply doesn't run/output anything resulting in the default texture color (purple) being shown
 * AccessViolationException on linkProgram on mobile chipsets (Intel Graphis 6xx and the likes)
+
+# Sources
+
+* [Alan Zucconi - Signed distance functions](https://www.alanzucconi.com/2016/07/01/signed-distance-functions/)
+* [iq's distance functions](https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm)
+* [Jamie Wong - Ray marching](http://jamie-wong.com/2016/07/15/ray-marching-signed-distance-functions/)
+* [jasmcole.com - Signed distance fields](https://jasmcole.com/2019/10/03/signed-distance-fields/)
