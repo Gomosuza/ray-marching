@@ -80,18 +80,36 @@ float morphingSpheres(vec3 pos, float r)
 vec2 sceneSDF(vec3 p)
 {
     float dist = MAX_DEPTH;
+    float matIndex;
     // bunch of hardcoded spheres that don't move
     for (int i = 0; i < spheres.length; i++)
     {
         float d = sphere(p, spheres[i].pos, spheres[i].radius);
         if (d < dist)
+        {
             dist = d;
+            matIndex = 1.0;
+        }
     }
-    dist = min(dist, smoothedRow(p, 1));
-    dist = min(dist, morphingSpheres(p, 1));
-    dist = min(dist, smoothedSpheres(p, 1));
-
-    return vec2(dist, 0.0);
+    float d = smoothedRow(p, 1);
+    if (d < dist)
+    {
+        dist = d;
+        matIndex = 2.0;
+    }
+    d = morphingSpheres(p, 1);
+    if (d < dist)
+    {
+        dist = d;
+        matIndex = 3.0;
+    }
+    d = smoothedSpheres(p, 1);
+    if (d < dist)
+    {
+        dist = d;
+        matIndex = 4.0;
+    }
+    return vec2(dist, matIndex);
 }
 
 vec2 march(vec3 pos, vec3 dir)
@@ -169,13 +187,16 @@ vec3 light(vec3 eye, vec3 sdfPos, vec3 lightPos, vec3 lightPower, float illumina
     return lightPower * (dotLN + pow(dotRV, illumination));
 }
 
-vec3 phong(vec3 eye, vec3 sdfPos)
+vec3 phong(vec3 eye, vec3 sdfPos, vec3 dir)
 {
     const vec3 ambient = vec3(0.2);
     // hardcode lights
+    
+    float frenel = clamp(1 + dot(dir, sdfNormal(sdfPos)), 0, 1);
+
     return ambient +
         light(eye, sdfPos, vec3(0, 2, -2), vec3(0.5), 10) +
-        light(eye, sdfPos, vec3(0, -2, -2), vec3(0.1), 20);
+        frenel * light(eye, sdfPos, vec3(0, -2, -2), vec3(0.1), 20);
 }
 
 void main()
@@ -201,11 +222,36 @@ void main()
     }
     else
     {
-        vec3 scenePos = eye + dir * distToScene;
-        col = phong(eye, scenePos);
+        if (matIndex < 0.5)
+        {
+            col = vec3(0); // reserved/unused
+        }
+        else if (matIndex < 1.5)
+        {
+            col = vec3(0.4545, 0, 0.2); // individual spheres
+        }
+        else if (matIndex < 2.5)
+        {
+            col = vec3(0.1, 0.2, 0.9); // smoothedRow
+        }
+        else if (matIndex < 3.5)
+        {
+            col = vec3(0.45, 0.1, 0.33); // morphingSpheres
+        }
+        else if (matIndex < 4.5)
+        {
+            col = vec3(0.1, 0.9, 0.1); // smoothedSpheres
+        }
+        else
+        {
+            // undefined
+            col = vec3(0);
+        }
 
-        // frenel
-        col += vec3(clamp(1+dot(dir,sdfNormal(scenePos)),0,1));
+        vec3 scenePos = eye + dir * distToScene;
+        col += phong(eye, scenePos, dir);
+
+        col = pow(col, vec3(0.8,0.9,1.0));
     }
     imageStore(framebuffer, pos, vec4(col, 1));
 }
