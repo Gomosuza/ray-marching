@@ -2,9 +2,11 @@
 
 Realtime compute shader based raymarching with [CSG](https://en.wikipedia.org/wiki/Constructive_solid_geometry) based on [SDF](https://en.wikipedia.org/wiki/Signed_distance_function):
 
-:warning: This project is work in progress!
-
 ![Ray marching](screenshots/raymarching.png)
+
+Gif:
+
+![Ray marching](screenshots/raymarching.gif)
 
 [![Ray-marching](https://dev.azure.com/marcstanlive/Opensource/_apis/build/status/120)](https://dev.azure.com/marcstanlive/Opensource/_build/definition?definitionId=120)
 
