@@ -38,6 +38,12 @@ float sphere(vec3 pos, vec3 center, float r)
     return length(pos - center) - r;
 }
 
+float torus(vec3 p, vec2 t)
+{
+  vec2 q = vec2(length(p.xy) - t.x,p.z);
+  return length(q) - t.y;
+}
+
 float smin(float a, float b, float k)
 {
     float h = max(k - abs(a-b), 0);
@@ -76,6 +82,11 @@ float morphingSpheres(vec3 pos, float r)
             0.1);
 }
 
+float morphTorus(vec3 p)
+{
+    return smin(torus(p - vec3(0, -3, 4), vec2(1, 0.5)), sphere(p, vec3(0, -3, 4 + cos(time)), 0.5), 0.5);
+}
+
 /* returns distance and material index */
 vec2 sceneSDF(vec3 p)
 {
@@ -108,6 +119,12 @@ vec2 sceneSDF(vec3 p)
     {
         dist = d;
         matIndex = 4.0;
+    }
+    d = morphTorus(p);
+    if (d < dist)
+    {
+        dist = d;
+        matIndex = 5.0;
     }
     return vec2(dist, matIndex);
 }
@@ -241,6 +258,10 @@ void main()
         else if (matIndex < 4.5)
         {
             col = vec3(0.1, 0.9, 0.1); // smoothedSpheres
+        }
+        else if (matIndex < 5.5)
+        {
+            col = vec3(0.66, 0.33, 0.11); // morphTorus
         }
         else
         {
