@@ -8,8 +8,6 @@ Gif:
 
 ![Ray marching](screenshots/raymarching.gif)
 
-[![Ray-marching](https://dev.azure.com/marcstanlive/Opensource/_apis/build/status/120)](https://dev.azure.com/marcstanlive/Opensource/_build/definition?definitionId=120)
-
 ___
 
 # Setup
