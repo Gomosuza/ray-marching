@@ -4,21 +4,21 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@01aecccf739ca6ff86c0539fbc67a7a5007bbc81 # pin@v2 
     - name: Checkout submodules
       shell: bash
       run: |
         auth_header="$(git config --local --get http.https://github.com/.extraheader)"
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-    - uses: actions/setup-dotnet@v1
+    - uses: actions/setup-dotnet@b7821147f564527086410e8edd122d89b4b9602f # pin@v1 
       with:
         dotnet-version: 3.1.100
     - name: build
       run: dotnet build -c Release
     - name: publish
       run: dotnet publish -c Release --no-build RayMarching/RayMarching.csproj -o output/RayMarching
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@3446296876d12d4e3a0f3145a3c87e67bf0a16b5 # pin@v1 
       with:
         name: RayMarching
         path: output
